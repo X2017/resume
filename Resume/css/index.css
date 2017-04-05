@@ -1,0 +1,76 @@
+@charset 'utf-8';
+#skill{
+	margin: 30px auto 30px auto;
+}
+#skill li{
+	margin: 10px 0;
+}
+#skill li strong{
+	font-weight: normal;
+	color: #232323;
+	cursor: pointer;
+}
+#skill li strong:hover{
+	color: #005695;
+}
+.skillLeft{
+	float: left;
+}
+.skillRight{
+	float: right;
+	width: 40%;
+	border-radius: 5px;
+	height: 25px;
+	overflow: hidden;
+	background: #D1D1D1;
+}
+#skill li:after{
+	content:".";
+	height:0;
+	visibility:hidden;  
+	display:block;  
+	clear:both;
+}
+.skillRight div{
+	height: 25px;
+}
+.html{
+	width: 90%;
+	background: #F16529;
+}
+.js{
+	width: 65%;
+	background: #76C2AF;
+}
+.jq{
+	width: 80%;
+	background: #F87F13;
+}
+.boot{
+	width: 70%;
+	background: #8C2196;
+}
+.ps{
+	width: 60%;
+	background: #0C5FA1;
+}
+.fire{
+	width: 70%;
+	background: #C89700;
+}
+@media (min-width: 480px) and (max-width: 767px) {
+	.skillRight{
+		width:100%;
+	}
+	#skill li strong{
+		font-size: 13px;
+	}
+}
+@media (max-width: 479px) {
+	.skillRight{
+		width:100%;
+	}
+	#skill li strong{
+		font-size: 13px;
+	}
+}

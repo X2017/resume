@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>addAdmin</title>
+	<script type="text/javascript">
+		function ajax(obj) {
+			var xhr = (function () {
+				if (typeof XMLHttpRequest != 'undefined') {
+					return new XMLHttpRequest();
+				} else if (typeof ActiveXObject != 'undefined') {
+					var version = [
+						'MSXML2.XMLHttp.6.0',
+						'MSXML2.XMLHttp.3.0',
+						'MSXML2.XMLHttp'
+					];
+					for (var i = 0; version.length; i ++) {
+						try {
+							return new ActiveXObject(version[i]);
+						} catch (e) {}	
+					}
+				} else {
+					throw new Error('您的系统或浏览器不支持XHR对象！');
+				}
+			})();
+			obj.url = obj.url + '?rand=' + Math.random();
+			obj.data = (function (data) {
+				var arr = [];
+				for (var i in data) {
+					arr.push(encodeURIComponent(i) + '=' + encodeURIComponent(data[i]));
+				}
+				return arr.join('&');
+			})(obj.data);
+			if (obj.method === 'get') obj.url += obj.url.indexOf('?') == -1 ? '?' + obj.data : '&' + obj.data;
+			if (obj.async === true) {
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState == 4) {
+						callback();
+					}
+				};
+			}
+			xhr.open(obj.method, obj.url, obj.async);
+			if (obj.method === 'post') {
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xhr.send(obj.data);	
+			} else {
+				xhr.send(null);
+			}
+			if (obj.async === false) {
+				callback();
+			}
+			function callback() {
+				if (xhr.status == 200) {
+					obj.success(xhr.responseText);
+				} else {
+					alert('获取数据错误！错误代号：' + xhr.status + '，错误信息：' + xhr.statusText);
+				}	
+			}
+		}
+		function serialize(form) {
+			var form_length = form.elements.length;
+			var form_element = form.elements;
+			for (var i = 0; i < form_length; i ++) {
+				var form = form_element[i];
+				var parts = {};
+				for (var j = 0; j < form_length; j ++) {
+					var filed = form_element[j];
+					switch (filed.type) {
+						case undefined : 
+						case 'submit' : 
+						case 'reset' :
+						case 'file' : 
+						case 'button' : 
+							break;
+						case 'radio' : 
+						case 'checkbox' : 
+							if (!filed.selected) break;
+						case 'select-one' : 
+						case 'select-multiple' :
+							for (var k = 0; k < filed.options.length; j ++) {
+								var option = filed.options[k];
+								if (option.selected) {
+									var optValue = '';
+									if (option.hasAttribute) {
+										optValue = (option.hasAttribute('value') ? option.value : option.text);
+									} else {
+										optValue = (option.attributes('value').specified ? option.value : option.text);
+									}
+									parts[filed.name] = optValue; 
+								}
+							}
+							break;
+						default :
+							parts[filed.name] = filed.value;
+					}
+				}
+				return parts;
+			}
+		}
+		window.onload=function () {
+			document.getElementById('button').onclick=function () {
+				var flag = true;
+				if (document.getElementById('admin').value == '') {
+					flag = false;
+				}
+				if (document.getElementById('password').value == '') {
+					flag = false;
+				}
+				if (flag) {
+					ajax({
+						method:'post',
+						url:'add.php',
+						data:serialize(document.getElementById('form')),
+						success:function (responseText, statusText) {
+							alert(responseText);
+						},
+						async:true
+					});
+				}
+			};
+		}
+	</script>
+</head>
+<body>
+	<form id="form">
+		<div>
+			<label for="admin">Name</label>
+			<input type="text" id="admin" name="admin">
+		</div>
+		<div>
+			<label for="password">Password</label>
+			<input type="text" id="password" name="password">
+		</div>
+		<div>
+			<button type="button" id="button">Button</button>
+		</div>
+	</form>
+	
+</body>
+</html>
